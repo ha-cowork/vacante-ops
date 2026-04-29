@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coordinación de operaciones — Horizons Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;500;600&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ha-blue: #3356F6;
+    --ha-dark: #231F20;
+    --ha-offwhite: #F1F2F2;
+    --ha-grey: #666666;
+    --ha-white: #FFFFFF;
+    --ha-blue-10: rgba(51, 86, 246, 0.08);
+    --ha-blue-20: rgba(51, 86, 246, 0.15);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 400;
+    color: var(--ha-dark);
+    background: var(--ha-white);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === HERO === */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px;
+    position: relative;
+    overflow: hidden;
+    background: var(--ha-dark);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, var(--ha-blue) 0%, transparent 70%);
+    opacity: 0.12;
+    animation: pulse 8s ease-in-out infinite;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: -20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--ha-blue) 0%, transparent 70%);
+    opacity: 0.06;
+    animation: pulse 12s ease-in-out infinite reverse;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.12; }
+    50% { transform: scale(1.15); opacity: 0.18; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+  }
+
+  .hero-label {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ha-blue);
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-title {
+    font-weight: 500;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.1;
+    color: var(--ha-white);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero-title span {
+    color: var(--ha-blue);
+  }
+
+  .hero-subtitle {
+    font-weight: 400;
+    font-size: 20px;
+    color: rgba(255,255,255,0.6);
+    max-width: 640px;
+    line-height: 1.6;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .hero-cta {
+    margin-top: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+
+  .hero-cta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ha-white);
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 16px 32px;
+    transition: all 0.3s ease;
+  }
+
+  .hero-cta a:hover {
+    border-color: var(--ha-blue);
+    background: var(--ha-blue);
+  }
+
+  .hero-cta a .arrow {
+    transition: transform 0.3s ease;
+  }
+
+  .hero-cta a:hover .arrow {
+    transform: translateY(4px);
+  }
+
+  .hero-logo {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.1s;
+  }
+
+  .hero-logo img {
+    height: 40px;
+    filter: brightness(0) invert(1);
+  }
+
+  .hero-logo span {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ha-white);
+    opacity: 0.7;
+  }
+
+  /* === HERO GRID LINES === */
+  .hero-grid-lines {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .grid-line {
+    position: absolute;
+    background: var(--ha-blue);
+    opacity: 0.04;
+  }
+
+  .grid-line-1 {
+    width: 1px;
+    height: 100%;
+    left: 25%;
+    animation: gridSlide 20s ease-in-out infinite;
+  }
+
+  .grid-line-2 {
+    width: 100%;
+    height: 1px;
+    top: 40%;
+    animation: gridSlideH 25s ease-in-out infinite;
+  }
+
+  .grid-line-3 {
+    width: 1px;
+    height: 100%;
+    left: 70%;
+    animation: gridSlide 18s ease-in-out infinite reverse;
+  }
+
+  @keyframes gridSlide {
+    0%, 100% { opacity: 0.04; transform: translateX(0); }
+    50% { opacity: 0.08; transform: translateX(40px); }
+  }
+
+  @keyframes gridSlideH {
+    0%, 100% { opacity: 0.03; transform: translateY(0); }
+    50% { opacity: 0.07; transform: translateY(20px); }
+  }
+
+  /* === GRID NUMBERS === */
+  .grid-numbers {
+    position: absolute;
+    right: 60px;
+    bottom: 60px;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 1s;
+  }
+
+  .grid-numbers span {
+    display: block;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.15);
+    line-height: 2;
+    text-align: right;
+  }
+
+  /* === SECTIONS === */
+  .section {
+    padding: 100px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-dark {
+    background: var(--ha-dark);
+    max-width: 100%;
+    padding: 100px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-dark::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, var(--ha-blue) 0%, transparent 70%);
+    opacity: 0.06;
+    animation: float 15s ease-in-out infinite;
+  }
+
+  .section-dark::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -15%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, var(--ha-blue) 0%, transparent 70%);
+    opacity: 0.04;
+    animation: float 20s ease-in-out infinite reverse;
+  }
+
+  .section-dark .section-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-blue {
+    background: var(--ha-blue);
+    max-width: 100%;
+    padding: 100px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-blue::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    left: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    animation: float 18s ease-in-out infinite;
+  }
+
+  .section-blue::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    right: -15%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0,0,0,0.1) 0%, transparent 70%);
+    animation: float 22s ease-in-out infinite reverse;
+  }
+
+  .section-blue .section-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-number {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 12px;
+    color: var(--ha-grey);
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+
+  .section-dark .section-number {
+    color: var(--ha-blue);
+  }
+
+  .section-title {
+    font-weight: 500;
+    font-size: 36px;
+    color: var(--ha-blue);
+    margin-bottom: 40px;
+    line-height: 1.2;
+  }
+
+  .section-dark .section-title {
+    color: var(--ha-white);
+  }
+
+  .section-text {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ha-dark);
+    max-width: 720px;
+    margin-bottom: 24px;
+  }
+
+  .section-dark .section-text {
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* === REVEAL ANIMATION === */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* === RESPONSIBILITY CARDS === */
+  .resp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-top: 48px;
+  }
+
+  .resp-card {
+    background: var(--ha-offwhite);
+    padding: 36px;
+    border-left: 3px solid var(--ha-blue);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .resp-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(35, 31, 32, 0.08);
+  }
+
+  .resp-card-number {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 11px;
+    color: var(--ha-blue);
+    margin-bottom: 12px;
+  }
+
+  .resp-card p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ha-dark);
+  }
+
+  /* === PROFILE SECTION === */
+  .profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    margin-top: 48px;
+  }
+
+  .profile-block h3 {
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--ha-blue);
+    margin-bottom: 20px;
+    font-family: 'Roboto Mono', monospace;
+  }
+
+  .section-dark .profile-block h3 {
+    color: var(--ha-blue);
+  }
+
+  .profile-block ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .profile-block ul li {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(35,31,32,0.06);
+  }
+
+  .section-dark .profile-block ul li {
+    color: rgba(255,255,255,0.75);
+    border-bottom-color: rgba(255,255,255,0.08);
+  }
+
+  .profile-block ul li:last-child {
+    border-bottom: none;
+  }
+
+  /* === CONDITIONS === */
+  .conditions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0;
+    margin-top: 48px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .condition-item {
+    padding: 32px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .condition-label {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--ha-blue);
+    margin-bottom: 10px;
+  }
+
+  .condition-value {
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--ha-white);
+    line-height: 1.4;
+  }
+
+  .condition-note {
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 6px;
+  }
+
+  /* === CTA / APPLY === */
+  .apply-section {
+    text-align: left;
+  }
+
+  .apply-title {
+    font-weight: 500;
+    font-size: 42px;
+    color: var(--ha-white);
+    margin-bottom: 32px;
+    line-height: 1.15;
+  }
+
+  .apply-steps {
+    list-style: none;
+    padding: 0;
+    margin: 40px 0;
+    max-width: 640px;
+  }
+
+  .apply-steps li {
+    display: flex;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    color: var(--ha-white);
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  .apply-steps li .step-num {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    color: var(--ha-blue);
+    flex-shrink: 0;
+    padding-top: 3px;
+  }
+
+  .apply-email {
+    display: inline-block;
+    margin-top: 32px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 18px;
+    color: var(--ha-white);
+    text-decoration: none;
+    padding: 20px 40px;
+    border: 2px solid var(--ha-white);
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+  }
+
+  .apply-email:hover {
+    background: var(--ha-white);
+    color: var(--ha-blue);
+  }
+
+  /* === CONSTELLATION === */
+  .constellation-section {
+    position: relative;
+    height: 100vh;
+    background: #000000;
+    overflow: hidden;
+  }
+
+  .constellation-section canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* === FOOTER === */
+  .footer {
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 12px;
+    color: var(--ha-grey);
+  }
+
+  .footer a {
+    color: var(--ha-grey);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer a:hover {
+    color: var(--ha-blue);
+  }
+
+  /* === TIMELINE === */
+  .timeline {
+    margin-top: 48px;
+    position: relative;
+    padding-left: 32px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  .timeline-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .timeline-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .timeline-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.25);
+    background: var(--ha-dark);
+    flex-shrink: 0;
+    margin-left: -32px;
+    margin-top: 4px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .timeline-dot.active {
+    border-color: var(--ha-blue);
+    background: var(--ha-blue);
+    box-shadow: 0 0 20px rgba(51, 86, 246, 0.4);
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes dotPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(51, 86, 246, 0.4); }
+    50% { box-shadow: 0 0 30px rgba(51, 86, 246, 0.7); }
+  }
+
+  .timeline-date {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    color: var(--ha-blue);
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .timeline-label {
+    font-weight: 500;
+    font-size: 20px;
+    color: var(--ha-white);
+  }
+
+  /* === INLINE CTA BUTTON === */
+  .hero-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ha-blue);
+    text-decoration: none;
+    border: 1px solid var(--ha-blue);
+    padding: 16px 32px;
+    transition: all 0.3s ease;
+  }
+
+  .hero-cta-btn:hover {
+    background: var(--ha-blue);
+    color: var(--ha-white);
+  }
+
+  .hero-cta-btn .arrow {
+    transition: transform 0.3s ease;
+  }
+
+  .hero-cta-btn:hover .arrow {
+    transform: translateY(4px);
+  }
+
+  /* === SEPARATOR LINE === */
+  .separator {
+    max-width: 1200px;
+    margin: 0 auto;
+    border: none;
+    border-top: 1px solid var(--ha-offwhite);
+  }
+
+  /* === ABOUT BLOCK === */
+  .about-text {
+    font-size: 20px;
+    line-height: 1.7;
+    color: var(--ha-dark);
+    max-width: 720px;
+  }
+
+  .about-text strong {
+    font-weight: 600;
+  }
+
+  /* === KEYFRAMES === */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(30px, -20px) scale(1.05); }
+    50% { transform: translate(-10px, 15px) scale(0.95); }
+    75% { transform: translate(20px, 10px) scale(1.03); }
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 768px) {
+    .hero {
+      padding: 60px 28px;
+      min-height: 90vh;
+    }
+
+    .hero-logo {
+      top: 28px;
+      left: 28px;
+    }
+
+    .hero-title {
+      font-size: 32px;
+    }
+
+    .hero-subtitle {
+      font-size: 17px;
+    }
+
+    .section, .section-dark, .section-blue {
+      padding: 64px 28px;
+    }
+
+    .section-title {
+      font-size: 28px;
+    }
+
+    .resp-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .profile-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .conditions-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .condition-item {
+      border-right: none;
+    }
+
+    .apply-title {
+      font-size: 28px;
+    }
+
+    .grid-numbers {
+      display: none;
+    }
+
+    .footer {
+      flex-direction: column;
+      gap: 12px;
+      padding: 28px;
+    }
+
+    .clients-bar {
+      padding: 40px 28px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-lines">
+    <div class="grid-line grid-line-1"></div>
+    <div class="grid-line grid-line-2"></div>
+    <div class="grid-line grid-line-3"></div>
+  </div>
+  <div class="grid-numbers">
+    <span>48.8584 N</span>
+    <span>21.4375 W</span>
+    <span>2026.06</span>
+    <span>HA-OPS-01</span>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-logo">
+      <img src="https://horizonsarchitecture.ai/design/assets/logo-HA-1200px.png" alt="Horizons Architecture"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <span style="display:none;">HORIZONS ARCHITECTURE</span>
+    </div>
+    <p class="hero-label">Vacante abierta</p>
+    <h1 class="hero-title">Coordinaci&oacute;n de <span>operaciones</span></h1>
+    <p class="hero-subtitle">Buscamos a alguien que ejecute y produzca junto al equipo fundador de HA. Una posici&oacute;n con ownership sobre entregables, proyectos y la operaci&oacute;n de una empresa de I+D.</p>
+    <div class="hero-cta">
+      <a href="#sobre">
+        Conocer m&aacute;s <span class="arrow">&darr;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE HA -->
+<section class="section reveal" id="sobre">
+  <span class="section-number">01</span>
+  <h2 class="section-title">Sobre HA</h2>
+  <p class="about-text">
+    Horizons Architecture es una empresa de investigaci&oacute;n y desarrollo. Dise&ntilde;amos sistemas de <strong>inteligencia h&iacute;brida humano-m&aacute;quina</strong> para que instituciones, gobiernos y organizaciones tomen mejores decisiones frente a desaf&iacute;os complejos.
+  </p>
+  <br>
+  <p class="section-text">
+    Combinamos pensamiento sist&eacute;mico, inteligencia artificial y trabajo transdisciplinario. Somos un equipo fundador de 4 personas con colaboradores especializados. Cada proyecto es distinto y trae retos nuevos.
+  </p>
+</section>
+
+<!-- CONSTELLATION -->
+<div class="constellation-section">
+  <canvas id="constellation"></canvas>
+</div>
+
+<!-- RESPONSABILIDADES -->
+<section class="section reveal">
+  <span class="section-number">02</span>
+  <h2 class="section-title">Lo que vas a hacer</h2>
+  <p class="section-text">
+    La persona trabajar&aacute; directamente con la COO y cofundadora de HA. La idea es que pueda resolver el d&iacute;a a d&iacute;a operativo de manera aut&oacute;noma, con respaldo permanente de la direcci&oacute;n.
+  </p>
+
+  <div class="resp-grid">
+    <div class="resp-card reveal">
+      <span class="resp-card-number">01</span>
+      <p>Ejecutar y dar seguimiento a entregables de proyectos activos: reportes, protocolos, materiales, con supervisi&oacute;n de los fundadores.</p>
+    </div>
+    <div class="resp-card reveal">
+      <span class="resp-card-number">02</span>
+      <p>Coordinar la log&iacute;stica operativa de programas: calendarizaci&oacute;n, comunicaci&oacute;n con participantes, seguimiento a acuerdos.</p>
+    </div>
+    <div class="resp-card reveal">
+      <span class="resp-card-number">03</span>
+      <p>Preparar documentos, presentaciones y materiales para entregas a clientes.</p>
+    </div>
+    <div class="resp-card reveal">
+      <span class="resp-card-number">04</span>
+      <p>Probar, documentar y operar agentes de IA y flujos de trabajo automatizados que el equipo dise&ntilde;e.</p>
+    </div>
+    <div class="resp-card reveal">
+      <span class="resp-card-number">05</span>
+      <p>Apoyar en la estandarizaci&oacute;n de procesos internos de HA conforme se vayan identificando.</p>
+    </div>
+    <div class="resp-card reveal">
+      <span class="resp-card-number">06</span>
+      <p>Desarrollar proyectos asignados con autonom&iacute;a &mdash; investigaci&oacute;n, estructura, propuesta &mdash; bajo la gu&iacute;a del equipo fundador.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PERFIL -->
+<section class="section-dark">
+  <div class="section-inner reveal">
+    <span class="section-number">03</span>
+    <h2 class="section-title">A qui&eacute;n buscamos</h2>
+
+    <div class="profile-grid">
+      <div class="profile-block">
+        <h3>Formaci&oacute;n</h3>
+        <ul>
+          <li>Licenciatura terminada. Ingenier&iacute;a industrial, sistemas, administraci&oacute;n, gesti&oacute;n de proyectos, comunicaci&oacute;n o af&iacute;n.</li>
+          <li>M&aacute;s que la carrera, nos interesa c&oacute;mo piensas y c&oacute;mo organizas.</li>
+          <li>Ingl&eacute;s.</li>
+        </ul>
+      </div>
+
+      <div class="profile-block">
+        <h3>Experiencia</h3>
+        <ul>
+          <li>Al menos 2 a&ntilde;os de experiencia laboral. Consideramos pr&aacute;cticas profesionales.</li>
+          <li>No necesariamente en consultor&iacute;a, pero s&iacute; en contextos donde haya tenido que coordinar con varias personas, cumplir plazos y tratar con contrapartes externas.</li>
+        </ul>
+      </div>
+
+      <div class="profile-block">
+        <h3>Habilidades</h3>
+        <ul>
+          <li>Capacidad de leer, sintetizar y producir sobre temas que no conoces. En HA, un d&iacute;a trabajas con gobierno y al siguiente con emprendedoras.</li>
+          <li>Redacci&oacute;n profesional clara: correos, reportes, documentos de trabajo.</li>
+          <li>Soltura con herramientas de IA (prompting, flujos automatizados). No pedimos experiencia avanzada, pero s&iacute; curiosidad genuina.</li>
+          <li>Organizaci&oacute;n rigurosa cuando manejas varios proyectos al mismo tiempo.</li>
+          <li>Criterio para empezar a mover las cosas con lo que tienes, y preguntar cuando algo no te queda claro.</li>
+        </ul>
+      </div>
+
+      <div class="profile-block">
+        <h3>Actitud</h3>
+        <ul>
+          <li>Disciplina y responsabilidad con el trabajo remoto.</li>
+          <li>Disposici&oacute;n para aprender. Nuestros proyectos son transdisciplinarios y cambian de industria, tem&aacute;tica y contexto constantemente.</li>
+          <li>Comunicaci&oacute;n abierta: preguntar cuando algo no quede claro.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONDICIONES -->
+<section class="section reveal">
+  <span class="section-number">04</span>
+  <h2 class="section-title">Condiciones</h2>
+
+  <div class="conditions-grid" style="border-top-color: var(--ha-offwhite);">
+    <div class="condition-item" style="border-bottom-color: var(--ha-offwhite); border-right-color: var(--ha-offwhite);">
+      <p class="condition-label">Modalidad</p>
+      <p class="condition-value" style="color: var(--ha-dark);">H&iacute;brida</p>
+    </div>
+    <div class="condition-item" style="border-bottom-color: var(--ha-offwhite); border-right-color: var(--ha-offwhite);">
+      <p class="condition-label">Horario</p>
+      <p class="condition-value" style="color: var(--ha-dark);">L-V, 9:00-18:00</p>
+      <p class="condition-note" style="color: var(--ha-grey);">Para juntas y comunicaci&oacute;n con el equipo</p>
+    </div>
+    <div class="condition-item" style="border-bottom-color: var(--ha-offwhite); border-right-color: var(--ha-offwhite);">
+      <p class="condition-label">Relaci&oacute;n</p>
+      <p class="condition-value" style="color: var(--ha-dark);">Honorarios</p>
+      <p class="condition-note" style="color: var(--ha-grey);">Prestaci&oacute;n de servicios profesionales</p>
+    </div>
+    <div class="condition-item" style="border-bottom-color: var(--ha-offwhite); border-right-color: var(--ha-offwhite);">
+      <p class="condition-label">Compensaci&oacute;n</p>
+      <p class="condition-value" style="color: var(--ha-dark);">$18,000 MXN + IVA</p>
+      <p class="condition-note" style="color: var(--ha-grey);">A negociar seg&uacute;n experiencia</p>
+    </div>
+    <div class="condition-item" style="border-bottom-color: var(--ha-offwhite); border-right-color: var(--ha-offwhite);">
+      <p class="condition-label">Inicio</p>
+      <p class="condition-value" style="color: var(--ha-dark);">Junio 2026</p>
+    </div>
+    <div class="condition-item" style="border-bottom-color: var(--ha-offwhite); border-right-color: var(--ha-offwhite);">
+      <p class="condition-label">Duraci&oacute;n</p>
+      <p class="condition-value" style="color: var(--ha-dark);">3 meses de prueba</p>
+      <p class="condition-note" style="color: var(--ha-grey);">Con posibilidad de renovar hasta fin de a&ntilde;o</p>
+    </div>
+  </div>
+
+  <div style="margin-top: 48px;">
+    <a href="#aplicar" class="hero-cta-btn">Aplicar <span class="arrow">&darr;</span></a>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="section-dark">
+  <div class="section-inner reveal">
+    <span class="section-number">05</span>
+    <h2 class="section-title">Timeline</h2>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot active"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">29 abril &mdash; 16 mayo</span>
+          <p class="timeline-label">Recepci&oacute;n de aplicaciones</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">19 &mdash; 30 mayo</span>
+          <p class="timeline-label">Entrevistas</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">Junio</span>
+          <p class="timeline-label">Decisi&oacute;n y oferta</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">Segunda quincena de junio &mdash; primera de julio</span>
+          <p class="timeline-label">Incorporaci&oacute;n</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APLICAR -->
+<section class="section-blue" id="aplicar">
+  <div class="section-inner apply-section reveal">
+    <span class="section-number" style="color: rgba(255,255,255,0.4);">06</span>
+    <h2 class="apply-title">Para aplicar</h2>
+
+    <ol class="apply-steps">
+      <li>
+        <span class="step-num">01</span>
+        CV (m&aacute;ximo 2 p&aacute;ginas).
+      </li>
+      <li>
+        <span class="step-num">02</span>
+        Un p&aacute;rrafo corto explicando por qu&eacute; te interesa esta posici&oacute;n.
+      </li>
+      <li>
+        <span class="step-num">03</span>
+        Un ejemplo de algo que hayas coordinado o gestionado &mdash; puede ser profesional, acad&eacute;mico o personal. Lo que importa es c&oacute;mo lo cuentas.
+      </li>
+    </ol>
+
+    <a href="mailto:sarahi@horizonsarchitecture.ai" class="apply-email">
+      sarahi@horizonsarchitecture.ai
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <span>Horizons Architecture &middot; 2026</span>
+  <a href="https://horizonsarchitecture.ai" target="_blank">horizonsarchitecture.ai</a>
+</footer>
+
+<!-- SCROLL REVEAL SCRIPT -->
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.12,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+<!-- CONSTELLATION SCRIPT -->
+<script>
+(function() {
+  const canvas = document.getElementById('constellation');
+  const ctx = canvas.getContext('2d');
+  const section = canvas.parentElement;
+
+  const topics = [
+    'Arquitectura institucional',
+    'Inteligencia artificial',
+    'Análisis de política pública',
+    'Pensamiento sistémico',
+    'Programas de emprendimiento',
+    'Integración gobierno–ciudadanía',
+    'Narrativa estratégica',
+    'Investigación aplicada',
+    'Diagnóstico organizacional',
+  ];
+
+  let width, height, dpr;
+  let started = false;
+  let startTime = 0;
+
+  const BLUE = { r: 51, g: 86, b: 246 };
+
+  // Each node appears staggered, then connections draw, then everything fades
+  const NODE_STAGGER = 600;    // ms between each node appearing
+  const NODE_FADE_IN = 800;    // ms for each node to fade in
+  const CONNECT_DELAY = 1000;  // ms after last node before connections start
+  const CONNECT_DURATION = 2000; // ms for all connections to draw
+  const HOLD_DURATION = 4000;  // ms to hold the full constellation
+  const FADE_OUT = 2000;       // ms for everything to fade out
+  const CYCLE_PAUSE = 2000;    // ms of black before restarting
+
+  let nodes = [];
+  let connections = [];
+  let stars = [];
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    width = section.clientWidth;
+    height = section.clientHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    placeNodes();
+    placeStars();
+  }
+
+  function placeNodes() {
+    const margin = 80;
+    const usableW = width - margin * 2;
+    const usableH = height - margin * 2;
+
+    // Organic scattered positions — avoid overlaps
+    const positions = [];
+    const minDist = Math.min(usableW, usableH) * 0.18;
+
+    for (let i = 0; i < topics.length; i++) {
+      let attempts = 0;
+      let x, y;
+      do {
+        x = margin + Math.random() * usableW;
+        y = margin + Math.random() * usableH;
+        attempts++;
+      } while (
+        attempts < 200 &&
+        positions.some(p => Math.hypot(p.x - x, p.y - y) < minDist)
+      );
+      positions.push({ x, y });
+    }
+
+    nodes = topics.map((label, i) => ({
+      x: positions[i].x,
+      y: positions[i].y,
+      baseX: positions[i].x,
+      baseY: positions[i].y,
+      label,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.2 + Math.random() * 0.3,
+    }));
+
+    // Build connections — each node connects to 2-3 nearest
+    connections = [];
+    const added = new Set();
+    nodes.forEach((node, i) => {
+      const dists = nodes
+        .map((other, j) => ({ j, d: Math.hypot(node.x - other.x, node.y - other.y) }))
+        .filter(d => d.j !== i)
+        .sort((a, b) => a.d - b.d);
+
+      const count = 2 + Math.floor(Math.random() * 2); // 2-3
+      for (let k = 0; k < count && k < dists.length; k++) {
+        const key = [Math.min(i, dists[k].j), Math.max(i, dists[k].j)].join('-');
+        if (!added.has(key)) {
+          added.add(key);
+          connections.push({ from: i, to: dists[k].j });
+        }
+      }
+    });
+  }
+
+  function placeStars() {
+    stars = Array.from({ length: 100 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 1.2 + 0.2,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.3 + Math.random() * 1.2,
+    }));
+  }
+
+  function totalCycleDuration() {
+    return topics.length * NODE_STAGGER + NODE_FADE_IN + CONNECT_DELAY + CONNECT_DURATION + HOLD_DURATION + FADE_OUT + CYCLE_PAUSE;
+  }
+
+  function draw(now) {
+    if (!started) { requestAnimationFrame(draw); return; }
+
+    const elapsed = now - startTime;
+    const cycle = totalCycleDuration();
+    const t = elapsed % cycle; // loop
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Background stars — always visible, twinkling
+    stars.forEach(star => {
+      const twinkle = Math.sin(now * 0.001 * star.speed + star.phase);
+      const alpha = 0.08 + twinkle * 0.06;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${Math.max(0.01, alpha)})`;
+      ctx.fill();
+    });
+
+    // Calculate phase
+    const allNodesIn = topics.length * NODE_STAGGER + NODE_FADE_IN;
+    const connectStart = allNodesIn + CONNECT_DELAY;
+    const connectEnd = connectStart + CONNECT_DURATION;
+    const holdEnd = connectEnd + HOLD_DURATION;
+    const fadeEnd = holdEnd + FADE_OUT;
+
+    // Global fade out multiplier
+    let globalAlpha = 1;
+    if (t > holdEnd && t <= fadeEnd) {
+      globalAlpha = 1 - (t - holdEnd) / FADE_OUT;
+    } else if (t > fadeEnd) {
+      globalAlpha = 0;
+    }
+
+    // Float nodes
+    nodes.forEach(node => {
+      node.x = node.baseX + Math.sin(now * 0.0006 * node.speed + node.phase) * 8;
+      node.y = node.baseY + Math.cos(now * 0.0004 * node.speed + node.phase * 1.5) * 5;
+    });
+
+    // Draw connections
+    if (t >= connectStart) {
+      const connProgress = Math.min(1, (t - connectStart) / CONNECT_DURATION);
+      const visibleConns = Math.floor(connProgress * connections.length);
+
+      for (let c = 0; c <= visibleConns && c < connections.length; c++) {
+        const conn = connections[c];
+        const a = nodes[conn.from];
+        const b = nodes[conn.to];
+
+        let lineAlpha;
+        if (c < visibleConns) {
+          lineAlpha = 0.12;
+        } else {
+          const frac = (connProgress * connections.length) - c;
+          lineAlpha = frac * 0.12;
+        }
+
+        // Pulse
+        const pulse = Math.sin(now * 0.0008 + c * 0.7) * 0.04;
+        lineAlpha = (lineAlpha + pulse) * globalAlpha;
+
+        if (lineAlpha > 0.005) {
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(${BLUE.r},${BLUE.g},${BLUE.b},${lineAlpha})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw nodes and labels
+    nodes.forEach((node, i) => {
+      const nodeStart = i * NODE_STAGGER;
+      if (t < nodeStart) return;
+
+      let nodeAlpha = Math.min(1, (t - nodeStart) / NODE_FADE_IN);
+      nodeAlpha *= globalAlpha;
+
+      if (nodeAlpha < 0.005) return;
+
+      // Twinkle
+      const twinkle = Math.sin(now * 0.0012 * node.speed + node.phase);
+      const brightness = 0.5 + twinkle * 0.3;
+
+      // Glow
+      const glowR = 18 + twinkle * 6;
+      const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, glowR);
+      glow.addColorStop(0, `rgba(${BLUE.r},${BLUE.g},${BLUE.b},${0.25 * brightness * nodeAlpha})`);
+      glow.addColorStop(1, 'transparent');
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, glowR, 0, Math.PI * 2);
+      ctx.fillStyle = glow;
+      ctx.fill();
+
+      // Dot
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, 3, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${BLUE.r},${BLUE.g},${BLUE.b},${Math.max(0.4, brightness) * nodeAlpha})`;
+      ctx.fill();
+
+      // Label
+      ctx.font = '500 14px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = `rgba(255,255,255,${0.75 * brightness * nodeAlpha})`;
+      ctx.fillText(node.label, node.x, node.y - 18);
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  // Start animation when section scrolls into view
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !started) {
+        started = true;
+        startTime = performance.now();
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sectionObserver.observe(section);
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(draw);
+})();
+</script>
+
+</body>
+</html>
