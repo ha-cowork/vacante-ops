@@ -1017,9 +1017,10 @@
       </li>
     </ol>
 
-    <a href="mailto:sarahi@horizonsarchitecture.ai?subject=Aplicaci%C3%B3n%20%E2%80%94%20Coordinaci%C3%B3n%20de%20operaciones%20HA" class="apply-email" target="_blank" rel="noopener">
+    <a href="mailto:sarahi@horizonsarchitecture.ai?subject=Aplicaci%C3%B3n%20%E2%80%94%20Coordinaci%C3%B3n%20de%20operaciones%20HA" class="apply-email" id="email-btn" onclick="copyEmail(event)">
       sarahi@horizonsarchitecture.ai
     </a>
+    <p id="email-copied" style="font-family:'Roboto Mono',monospace;font-size:13px;color:rgba(255,255,255,0.5);margin-top:12px;opacity:0;transition:opacity 0.3s;">Correo copiado al portapapeles</p>
   </div>
 </section>
 
@@ -1028,6 +1029,23 @@
   <span>Horizons Architecture &middot; 2026</span>
   <a href="https://horizonsarchitecture.ai" target="_blank">horizonsarchitecture.ai</a>
 </footer>
+
+<!-- COPY EMAIL SCRIPT -->
+<script>
+function copyEmail(e) {
+  e.preventDefault();
+  const email = 'sarahi@horizonsarchitecture.ai';
+  navigator.clipboard.writeText(email).then(() => {
+    document.getElementById('email-copied').style.opacity = '1';
+    setTimeout(() => {
+      document.getElementById('email-copied').style.opacity = '0';
+    }, 2500);
+  }).catch(() => {
+    // Fallback: open mailto
+    window.location.href = 'mailto:' + email + '?subject=Aplicaci%C3%B3n%20%E2%80%94%20Coordinaci%C3%B3n%20de%20operaciones%20HA';
+  });
+}
+</script>
 
 <!-- SCROLL REVEAL SCRIPT -->
 <script>
